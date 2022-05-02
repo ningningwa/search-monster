@@ -65,7 +65,7 @@ public final class PageRank {
 //        Statement statement = connection.createStatement();
 //        List<String> array = new ArrayList();
 //        Map<String, String> urls = new HashMap();
-    	//String query = "SELECT m.access_url as url, n.access_url as curl FROM (SELECT b.id, b.access_url, a.cid FROM t_doc_rel a JOIN t_document b WHERE a.id=b.id) m JOIN t_document n WHERE m.cid=n.id";
+    	String query = "SELECT m.access_url as url, n.access_url as curl FROM (SELECT b.id, b.access_url, a.cid FROM t_doc_rel a JOIN t_document b WHERE a.id=b.id) m JOIN t_document n WHERE m.cid=n.id";
 //        ResultSet resultSet=statement.executeQuery(query);
         
         String url = "jdbc:mysql://cis555final.cru751xzhha3.us-east-2.rds.amazonaws.com:3306/documents?user=cis555&password=cis555final";
@@ -87,7 +87,7 @@ public final class PageRank {
 				.format("jdbc")
 				.option("url", url)
 				.option("driver", "com.mysql.cj.jdbc.Driver")
-				.option("dbtable", "NEWREF")
+				.option("query", query)
 				.load();
 
   	    JavaRDD<Row> lines = df.toJavaRDD();
