@@ -118,6 +118,7 @@ public final class indexer {
                 .save();
 
         System.out.println("Finished writing to inverted_index");
+		spark.close();
 
     }
     
