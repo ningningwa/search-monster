@@ -119,6 +119,27 @@ public class DBHelper {
     }
     
     
+    public float getIdf(String table, String term) {
+		try {
+			Statement st = conn.createStatement();
+            String query = String.format("");
+			
+			ResultSet rs = st.executeQuery(query);
+			
+			if (!rs.next()) {
+				return 0;
+			} else {
+				return rs.getFloat("");
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return 0;
+    }
+    
+    
     public Set<String> getCorpus(String table) {
     	Set<String> res = new HashSet<>();
     	
