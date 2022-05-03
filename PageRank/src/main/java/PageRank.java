@@ -99,7 +99,6 @@ public final class PageRank {
   	      return new Tuple2<>(a, b);
   	    }).distinct().groupByKey().cache();
 
-  	    // Loads all URLs with other URL(s) link to from input file and initialize scores of them to one.
   	    JavaPairRDD<String, Double> scores = links.mapValues(rs -> 1.0);
 
   	    // Calculates and updates URL scores continuously using Pagescore algorithm.
@@ -120,7 +119,7 @@ public final class PageRank {
   	          }
   	          return results.iterator();
   	        });
-  	      // Re-calculates URL scores based on neighbor contributions.
+  	      // alpha=0.15
   	      scores = contribs.reduceByKey(new Sum()).mapValues(sum -> 0.15 + sum * 0.85);
   	      iter+=1;
   	    }
