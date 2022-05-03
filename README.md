@@ -3,7 +3,7 @@ Team Name: JustPass
 
 Full name & SEAS login of team members:
 Zhonghao Lian (zhlian)
-Ning Wan
+Ning Wan (ningwan)
 Xincheng Zhu
 Haoran Liu
 
@@ -26,6 +26,7 @@ Any special instructions for building and running your solution?
 Search Engine: enters the search_engine folder, run 'mvn exec:java@search-engine'
 Web Interface: enters the web_interface folder, run 'npm install' & 'npm start'
 
+PageRank: Run "mvn package" to generate PageRank jar file and then deploy it on Spark EMR with arguement "--class PageRank".
 
 Did you personally write _all_ the code you are submitting
 (other than code from the course web page)?
