@@ -1,4 +1,4 @@
-package invertindex;
+package bodyindexer;
 
 import java.io.Serializable;
 

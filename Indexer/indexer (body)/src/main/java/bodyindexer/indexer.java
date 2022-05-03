@@ -1,4 +1,4 @@
-package invertindex;
+package bodyindexer;
 
 import java.util.HashSet;
 import java.util.Set;
