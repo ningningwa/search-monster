@@ -22,17 +22,17 @@ public final class titleindexer {
     public static void main(String[] args) throws Exception {
 
 
-//        SparkSession spark = SparkSession
-//                .builder()
-//                .appName("Title Inverted Indexer")
-//                .getOrCreate();
-
         SparkSession spark = SparkSession
                 .builder()
-                .appName("Inverted Indexer")
-                //.master("local[5]")
-                .config("spark.master", "local[2]")
+                .appName("Title Inverted Indexer")
                 .getOrCreate();
+
+ //       SparkSession spark = SparkSession
+ //               .builder()
+ //               .appName("Inverted Indexer")
+                //.master("local[5]")
+ //               .config("spark.master", "local[2]")
+ //               .getOrCreate();
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
