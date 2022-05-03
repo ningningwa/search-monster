@@ -4,7 +4,7 @@ Team Name: JustPass
 Full name & SEAS login of team members:
 Zhonghao Lian (zhlian)
 Ning Wan (ningwan)
-Xincheng Zhu
+Xincheng Zhu （kyriezxc）
 Haoran Liu
 
 
@@ -30,7 +30,7 @@ PageRank: Run "mvn package" to generate PageRank jar file and then deploy it on 
 
 Indexer: Same as PageRank but with arguement "--class bodyindexer.indexer" for indexer (body) and "--class titleindexer.indexer" for indexer (title).
 
-Crawler: Run CrawlerTopology.java under crawler folder in order to crawl url to local redis database. Then, run WebcrawlerApplication.java under webcrawler folder and run "http://localhost:9527/document/saveAll" in browser to upload from local database to aws rds.
+Crawler: Run CrawlerTopology.java under crawler folder in order to crawl url to local redis database (change the root url you want to crawl if you want). This will save url/html and relationships into redis. Then, run WebcrawlerApplication.java under webcrawler folder and run "http://localhost:9527/document/saveAll" in browser to upload from local database(redis) to aws rds. (Redis should be installed.)
 
 Did you personally write _all_ the code you are submitting
 (other than code from the course web page)?
