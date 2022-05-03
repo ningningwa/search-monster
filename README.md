@@ -1,29 +1,41 @@
-# README #
+Group 17
+Team Name: JustPass
 
-This README would normally document whatever steps are necessary to get your application up and running.
+Full name & SEAS login of team members:
+Zhonghao Lian (zhlian)
+Ning Wan
+Xincheng Zhu
+Haoran Liu
 
-### What is this repository for? ###
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+Which features did you implement? 
+  (list features, or write 'Entire assignment')
+Crawler
+Indexer
+PageRank
+SearchEngine
+WebInterface
 
-### How do I get set up? ###
+Did you complete any extra-credit tasks? If so, which ones?
+  (list extra-credit tasks)
+No.
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+Any special instructions for building and running your solution?
+  (include detailed instructions, or write 'None')
 
-### Contribution guidelines ###
+Search Engine: enters the search_engine folder, run 'mvn exec:java@search-engine'
+Web Interface: enters the web_interface folder, run 'npm install' & 'npm start'
 
-* Writing tests
-* Code review
-* Other guidelines
 
-### Who do I talk to? ###
+Did you personally write _all_ the code you are submitting
+(other than code from the course web page)?
+  [X] Yes
+  [ ] No
 
-* Repo owner or admin
-* Other community or team contact
+Did you copy any code from the Internet, or from classmates?
+  [ ] Yes
+  [X] No
+
+Did you collaborate with anyone on this assignment?
+  [ ] Yes
+  [X] No
