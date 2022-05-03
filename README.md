@@ -5,7 +5,7 @@ Full name & SEAS login of team members:
 Zhonghao Lian (zhlian)
 Ning Wan (ningwan)
 Xincheng Zhu
-Haoran Liu
+Haoran Liu (haoranl)
 
 
 Which features did you implement? 
