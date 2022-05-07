@@ -6,13 +6,18 @@ public class Item {
 	public float tf;
 	public float pagerank;
 	public float score;
-	public String url;
 	
-	public Item(String term, float tf, String url) {
+	public String url;
+	public String title;
+	public String excerpt;
+	
+	public Item(String term, float tf, String url, String title, String excerpt) {
 		this.term = term;
 		this.tf = tf;
 		this.url = url;
-		this.factor = (float)0.5;
+		this.factor = (float)0.8;
+		this.title = title;
+		this.excerpt = excerpt;
 	}
 	
 	public void addPageRank(float pagerank) {
@@ -22,8 +27,7 @@ public class Item {
 
 	@Override
 	public String toString() {
-		return "Item [term=" + term + ", tf=" + tf + ", pagerank=" + pagerank + ", score=" + score + ", url=" + url
-				+ "]";
+		return "Item [term=" + term + ", factor=" + factor + ", tf=" + tf + ", pagerank=" + pagerank + ", score="
+				+ score + ", url=" + url + ", title=" + title + ", excerpt=" + excerpt + "]";
 	}
-
 }

@@ -5,6 +5,7 @@ import java.util.*;
 public class DBHelper {
 	
 	Connection conn;
+	private static float defaultPagerank;
 
 	public DBHelper() {
 		conn = getRemoteConnection();
@@ -49,6 +50,31 @@ public class DBHelper {
     }
     
     
+    public int getIndexSizeForTerm(String[] table, String term) {
+		try {
+			Statement st = conn.createStatement();
+			
+			int cnt = 0;
+			
+			for (String t: table) {
+	            String query = String.format("SELECT COUNT(*) as cnt FROM %s WHERE term=\'%s\';", t, term);
+				
+				ResultSet rs = st.executeQuery(query);
+				rs.next();	
+				
+				cnt += rs.getInt("cnt");
+			}
+				
+			return cnt;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return 0;
+    }
+    
+    
     public void printSampleData(String table, int limit) {		
 		try {
 			Statement st = conn.createStatement();
@@ -73,22 +99,25 @@ public class DBHelper {
     }
     
     
-    public void printInvertedIndex(String table, String term) {		
+    public void printInvertedIndex(String[] table, String term) {		
 		try {
 			Statement st = conn.createStatement();
-            String query = String.format("SELECT * FROM %s WHERE term=\'%s\'", table, term);
-			
-			ResultSet rs = st.executeQuery(query);
-			ResultSetMetaData rsmd = rs.getMetaData();
-			
-			int columnsNumber = rsmd.getColumnCount();
-			while (rs.next()) {
-				for (int i = 1; i <= columnsNumber; i++) {
-					if (i > 1) System.out.print(",  ");
-					String columnValue = rs.getString(i);
-					System.out.print(rsmd.getColumnName(i) + ": " + columnValue);
+            
+			for (String t: table) {
+				String query = String.format("SELECT * FROM %s WHERE term=\'%s\'", t, term);
+				
+				ResultSet rs = st.executeQuery(query);
+				ResultSetMetaData rsmd = rs.getMetaData();
+				
+				int columnsNumber = rsmd.getColumnCount();
+				while (rs.next()) {
+					for (int i = 1; i <= columnsNumber; i++) {
+						if (i > 1) System.out.print(",  ");
+						String columnValue = rs.getString(i);
+						System.out.print(rsmd.getColumnName(i) + ": " + columnValue);
+					}
+					System.out.println("");
 				}
-				System.out.println("");
 			}
 			
 		} catch (SQLException e) {
@@ -107,7 +136,8 @@ public class DBHelper {
 			ResultSet rs = st.executeQuery(query);
 
 			while (rs.next()) {
-				Item item = new Item(rs.getString("term"), rs.getFloat("weight"), rs.getString("url"));
+				Item item = new Item(rs.getString("term"), rs.getFloat("weight"), 
+						rs.getString("url"), rs.getString("title"), rs.getString("excerpt"));
 				list.add(item);
 			}
 			
@@ -119,24 +149,33 @@ public class DBHelper {
     }
     
     
-    public float getIdf(String table, String term) {
+    public List<Item> getInvertedIndexMulti(String[] table, String term) {	
+    	List<Item> list = new LinkedList<>();
+    	
 		try {
 			Statement st = conn.createStatement();
-            String query = String.format("");
+			Set<String> seen = new HashSet<>();
 			
-			ResultSet rs = st.executeQuery(query);
-			
-			if (!rs.next()) {
-				return 0;
-			} else {
-				return rs.getFloat("");
+			for (String t: table) {
+	            String query = String.format("SELECT * FROM %s WHERE term=\'%s\'", t, term);
+				ResultSet rs = st.executeQuery(query);
+
+				while (rs.next()) {
+					if (seen.contains(rs.getString("url"))) continue;
+
+					Item item = new Item(rs.getString("term"), rs.getFloat("weight"), 
+							rs.getString("url"), rs.getString("title"), rs.getString("excerpt"));
+					
+					list.add(item);
+					seen.add(rs.getString("url"));
+				}
 			}
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		
-		return 0;
+		return list;
     }
     
     
@@ -169,7 +208,7 @@ public class DBHelper {
 			ResultSet rs = st.executeQuery(query);
 			
 			if (!rs.next()) {
-				return 0;
+				return defaultPagerank;
 			} else {
 				return rs.getFloat("score");
 			}
@@ -178,6 +217,34 @@ public class DBHelper {
 			e.printStackTrace();
 		}
 		
-		return 0;
+		return defaultPagerank;
+    }
+    
+    
+    public Map<String, Float> getPagerankTable(String table) {
+    	Map<String, Float> map = new HashMap<>();
+    	
+		try {
+			Statement st = conn.createStatement();
+            String query = String.format("SELECT url, score FROM %s", table);
+			
+			ResultSet rs = st.executeQuery(query);
+
+			while (rs.next()) {
+				float score = rs.getFloat("score");
+				
+				// TODO: tuen the score normalization
+				if (score > 3) {
+					score = score / 30 + 2;
+				}
+				
+				map.put(rs.getString("url"), score);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+    	
+    	return map;
     }
 }

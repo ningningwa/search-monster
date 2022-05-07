@@ -12,38 +12,63 @@ import java.io.InputStreamReader;
 import java.sql.*;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
+import org.apache.spark.api.java.JavaPairRDD;
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SparkSession;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.tartarus.snowball.ext.englishStemmer;
+
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import scala.Tuple2;
 
 public class DBTest {
+	
+	static String[] indexTable = {
+			"te0_invertedindex",
+			"te1_invertedindex",
+			"te2_invertedindex"
+	};
 
 	public static void main(String[] args) {
 		DBHelper helper = new DBHelper();
-//		int size = helper.getTableSize("Test_titleindex");
+//		int size = helper.getTableSize("te2_invertedindex");
 //		System.out.println(size);
 		
 //		Set<String> terms = helper.getCorpus("Test_titleindex");
 //		System.out.println(terms.size());
 //		for (String term: terms) System.out.println(term);
 		
-//		helper.printInvertedIndex("Test_titleindex", "");
-//		helper.printSampleData("TestPageRankDemo", 100);
+		helper.printInvertedIndex(indexTable, "pennsylvania");
+//		helper.printSampleData("te2_invertedindex", 100);
 		
-		List<Item> index = helper.getInvertedIndex("Test_titleindex", "wikipedia");
+//		long startT = System.currentTimeMillis();
+//		System.out.println(helper.getIndexSizeForTerm("body0_invertedindex", "philadelphia"));	
+//		System.out.println("Time needed: " + (System.currentTimeMillis() - startT) / 1000);
 		
-		for (Item item: index) {
-			item.addPageRank(helper.getPagerankForUrl("TestPageRankDemo", item.url));
-		}
+//		classOf[org.apache.commons.lang3.SystemUtils].getResource("SystemUtils.class")
 		
-		Collections.sort(index, new Comparator<Item>(){
-			@Override
-			public int compare(Item a, Item b) {
-				if (a.score < b.score) return 1;
-				else return -1;
-			}
-		});
+//		Map<String, Float> map = helper.getPagerankTable("testPageRank_self_use");
+//		System.out.println(map.getOrDefault("https://www.upenn.edu/academics/graduate", (float) -1));
 		
-		for (Item item: index) {
-			System.out.println(item);
-		}
+//		Set<String> largeUrl = new HashSet<>();
+//		for (String key: map.keySet()) {
+//			if (map.get(key) > 10) {
+//				largeUrl.add(key);
+//			}
+//		}
+//		
+//		for (String url: largeUrl) {
+//			System.out.println(url + " : " + map.get(url));
+//		}
 	}
 }

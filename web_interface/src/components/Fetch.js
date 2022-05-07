@@ -16,4 +16,16 @@ const querySearch = async (query) => {
     return json;
 }
 
+
+const productSearch = async (query) => {
+    const url = domain + '/product/' + query;
+
+    const results = await fetch(url, {
+        method: 'GET'
+    });
+
+    return await results.json();
+}
+
 export default querySearch;
+export { productSearch };

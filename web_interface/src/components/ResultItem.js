@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 const ResultItem = ({ result }) => {
-    const { title, url, ir, pagerank } = result;
+    const { title, url, ir, pagerank, excerpt, score } = result;
 
     return (
         <div class="item">
@@ -12,8 +12,13 @@ const ResultItem = ({ result }) => {
                     <span>{ url }</span>
                 </div>
 
+
+                <div class="description">
+                    <p>{ excerpt }</p>
+                </div>
+
                 <div class="extra">
-                    {ir}, {pagerank}
+                    {ir}, {pagerank}, {score}
                 </div>
             </div>
         </div>
