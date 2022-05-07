@@ -1,6 +1,6 @@
 const domain =
   !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
-    ? 'http://localhost:8001'
+    ? 'http://ec2-52-207-237-70.compute-1.amazonaws.com:8001'
     : '';
 
 
