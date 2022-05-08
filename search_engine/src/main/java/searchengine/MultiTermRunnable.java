@@ -10,22 +10,19 @@ public class MultiTermRunnable implements Runnable {
 	float[] termW;
  	Map<String, Float> pagerank;
 	Map<String, Document> doc;
-	
-	static String[] indexTable = {
-			"te0_invertedindex",
-			"te1_invertedindex",
-			"te2_invertedindex"
-	};
+	String[] indexTable;
 	
 	public MultiTermRunnable(int termPos, String term, float[] termW,
 			Map<String, Float> pagerank,
-			Map<String, Document> doc) {
+			Map<String, Document> doc,
+			String[] tableList) {
 		
 		this.termPos = termPos;
 		this.term = term;
 		this.termW = termW;
 		this.pagerank = pagerank;
 		this.doc = doc;
+		this.indexTable = tableList;
 	}
 	
 
@@ -42,7 +39,7 @@ public class MultiTermRunnable implements Runnable {
 				d = doc.get(item.url);
 			} else {
 				d =  new Document(item.url, item.title, termW, item.excerpt);
-				d.setPagerank(pagerank.getOrDefault(item.url, (float) 0.01));
+				d.setPagerank(pagerank.getOrDefault(item.url, (float) 0.1));
 			}
 			
 			d.addTf(termPos, item.tf);

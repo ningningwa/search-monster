@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Results from './Results';
 import Products from './Products';
 import querySearch from './Fetch';
-import { productSearch } from './Fetch';
+import { productSearch, querySearchLarge } from './Fetch';
 
 
 const MainPage = () => {
@@ -11,11 +11,23 @@ const MainPage = () => {
     const [results, setResults] = useState([]);
     const [products, setProducts] = useState([]);
     const [advanced, setAdvanced] = useState(false);
+    const [more, setMore] = useState(false);
 
     const submitQuery = async (event) => {
         event.preventDefault();
         const resultsObj = await querySearch(query);
         setResults(resultsObj);
+        
+        if (resultsObj.length < 100) {
+            setMore(true);
+        }
+    }
+
+    const submitQueryLarge = async (event) => {
+        event.preventDefault();
+        const resultObj = await querySearchLarge(query);
+        setResults(resultObj);
+        setMore(false);
     }
 
     const submitAdvancedQuery = async (event) => {
@@ -64,6 +76,17 @@ const MainPage = () => {
                 
                 <div className="ui grid">
                     <div className="eleven wide column">
+                        {more ? (
+                            <div>
+                                Want more results? Click: 
+                                <button
+                                    className='ui tiny submit button'
+                                    onClick = {e => submitQueryLarge(e)}
+                                >
+                                    Search for More
+                                </button>
+                            </div>
+                        ): <div></div>}
                         <Results results={results} />
                     </div>
 

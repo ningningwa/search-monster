@@ -20,7 +20,7 @@ public class Document {
 		this.title = title;
 		tf = new float[termW.length];
 		this.termW = termW;
-		this.factor = (float)0.5;
+		this.factor = (float)0.3;
 		this.excerpt = excerpt;
 	}
 	

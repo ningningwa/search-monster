@@ -25,7 +25,7 @@ import org.tartarus.snowball.ext.englishStemmer;
 
 public class SearchEngine {
 	static Logger log = LogManager.getLogger(SearchEngine.class);
-	static float defaultPagerank = (float) 0.01;
+	static float defaultPagerank = (float) 0.1;
 	
 	static int numThreads = 15;
 	static int numIndexTable;
@@ -41,6 +41,17 @@ public class SearchEngine {
 			"te0_invertedindex",
 			"te1_invertedindex",
 			"te2_invertedindex"
+	};
+	static String[] indexTableL = {
+			"te0_invertedindex",
+			"te1_invertedindex",
+			"te2_invertedindex",
+			"te_final_invertedindex",
+			"te_final2_invertedindex",
+			"te_final3_invertedindex",
+			"te_final4_invertedindex",
+			"te_final5_invertedindex",
+			"te_final6_invertedindex"
 	};
 	
 	/**
@@ -66,6 +77,7 @@ public class SearchEngine {
         
         registerCORS();
         registerSearchRoute();
+        registerLargeResultRoute();
         registerProductSearchRoute();
         registerShutdownRoute();
 	}
@@ -92,7 +104,7 @@ public class SearchEngine {
 				List<Item> searchRes = new LinkedList<>();
 				
 				if (queries.size() == 1)
-					searchRes = getResultForQuery(queries.get(0));
+					searchRes = getResultForQuery(queries.get(0), indexTable);
 								
 				for (Item item: searchRes) {
 //					System.out.println(item);
@@ -111,7 +123,7 @@ public class SearchEngine {
 			} else {
 				
 				// Search for multiple keywords
-				List<Document> searchRes = multipleTermSearch(queries);
+				List<Document> searchRes = multipleTermSearch(queries, indexTable);
 				
 				for (Document d: searchRes) {
 					ObjectNode obj = mapper.createObjectNode();
@@ -127,11 +139,72 @@ public class SearchEngine {
 			}
 			
 			long endT = System.currentTimeMillis();
-			log.info("Search time for query {}: {}", query, (endT - startT) / 1000);
+			log.info("Search time for query {}: {}, with result size: {}", query, endT - startT, arrayNode.size());
 			
 			return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(arrayNode);
 		});
 	}
+	
+	
+	public static void registerLargeResultRoute() {
+		
+		get("/searchL/:query", (req, res) -> {
+			long startT = System.currentTimeMillis();
+			
+			String query = req.params(":query");
+			log.info("Received query: {}", query);
+						
+			List<String> queries = getQueryList(query);
+			
+			ObjectMapper mapper = new ObjectMapper();
+			ArrayNode arrayNode = mapper.createArrayNode();
+			
+			if (queries.size() <= 1) {			
+				// Single keyword search
+				List<Item> searchRes = new LinkedList<>();
+				
+				if (queries.size() == 1)
+					searchRes = getResultForQuery(queries.get(0), indexTableL);
+								
+				for (Item item: searchRes) {
+//					System.out.println(item);
+					
+					ObjectNode obj = mapper.createObjectNode();
+					obj.put("title", item.title); 
+					obj.put("url", item.url);
+					obj.put("pagerank", item.pagerank);
+					obj.put("ir", item.tf);
+					obj.put("excerpt", item.excerpt);
+					obj.put("score", item.score);
+					
+					arrayNode.add(obj);
+				}
+				
+			} else {
+				
+				// Search for multiple keywords
+				List<Document> searchRes = multipleTermSearch(queries, indexTableL);
+				
+				for (Document d: searchRes) {
+					ObjectNode obj = mapper.createObjectNode();
+					obj.put("title", d.title); 
+					obj.put("url", d.url);
+					obj.put("pagerank", d.pagerank);
+					obj.put("ir", d.cosSim);
+					obj.put("excerpt", d.excerpt);
+					obj.put("score", d.score); 
+					
+					arrayNode.add(obj);
+				}
+			}
+			
+			long endT = System.currentTimeMillis();
+			log.info("Search time for query {}: {}, with result size: {}", query, endT - startT, arrayNode.size());
+			
+			return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(arrayNode);
+		});
+	}
+	
 	
 	
 	public static void registerProductSearchRoute() {
@@ -158,7 +231,7 @@ public class SearchEngine {
 			}
 			
 			long endT = System.currentTimeMillis();
-			log.info("Search time for product {}: {}", query, (endT - startT) / 1000);
+			log.info("Search time for product {}: {}", query, endT - startT);
 			
 			return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(arrayNode);
 		});
@@ -203,9 +276,9 @@ public class SearchEngine {
 	/**
 	 * Helper functions for Search & Ranking
 	 */
-    private static List<Item> getResultForQuery(String query) {
+    private static List<Item> getResultForQuery(String query, String[] tableList) {
 		DBHelper helper = new DBHelper();
-		List<Item> index = helper.getInvertedIndexMulti(indexTable, query);
+		List<Item> index = helper.getInvertedIndexMulti(tableList, query);
 		log.info("Finished fetch index for term {}", query);
 		
 		ExecutorService executor = Executors.newFixedThreadPool(numThreads);
@@ -236,7 +309,8 @@ public class SearchEngine {
 			@Override
 			public int compare(Item a, Item b) {
 				if (a.score < b.score) return 1;
-				else return -1;
+				else if (a.score > b.score) return -1;
+				return 0;
 			}
 		});
 		
@@ -244,7 +318,7 @@ public class SearchEngine {
     }
     
     
-    public static List<Document> multipleTermSearch(List<String> queries) {
+    public static List<Document> multipleTermSearch(List<String> queries, String[] tableList) {
     	DBHelper helper = new DBHelper();
     	
     	int termSize = queries.size();
@@ -267,7 +341,7 @@ public class SearchEngine {
     	for (int i=0; i<termSize; i++) {
     		log.info("Begin fetch index for term {}", queries.get(i));
     		
-    		MultiTermRunnable r = new MultiTermRunnable(i, queries.get(i), termW, map, doc);
+    		MultiTermRunnable r = new MultiTermRunnable(i, queries.get(i), termW, map, doc, tableList);
     		executor.execute(r);
     	}
     	
@@ -291,7 +365,8 @@ public class SearchEngine {
 			@Override
 			public int compare(Document a, Document b) {
 				if (a.score < b.score) return 1;
-				else return -1;
+				else if (a.score > b.score) return -1;
+				else return 0;
 			}
 		});
 		

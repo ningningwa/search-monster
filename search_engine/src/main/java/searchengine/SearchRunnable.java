@@ -20,7 +20,7 @@ public class SearchRunnable implements Runnable {
 	public void run() {
 		for (int i=start; i<=end; i++) {
 			Item item = index.get(i);
-			item.addPageRank(pagerank.getOrDefault(item.url, (float) 0.01));
+			item.addPageRank(pagerank.getOrDefault(item.url, (float) 0.1));
 		}
 	}
 }

@@ -41,15 +41,15 @@ public class DBTest {
 
 	public static void main(String[] args) {
 		DBHelper helper = new DBHelper();
-//		int size = helper.getTableSize("te2_invertedindex");
+//		int size = helper.getTableSize("te_final6_invertedindex");
 //		System.out.println(size);
 		
 //		Set<String> terms = helper.getCorpus("Test_titleindex");
 //		System.out.println(terms.size());
 //		for (String term: terms) System.out.println(term);
 		
-		helper.printInvertedIndex(indexTable, "pennsylvania");
-//		helper.printSampleData("te2_invertedindex", 100);
+//		helper.printInvertedIndex(indexTable, "pennsylvania");
+//		helper.printSampleData("te_final1_invertedindex", 100);
 		
 //		long startT = System.currentTimeMillis();
 //		System.out.println(helper.getIndexSizeForTerm("body0_invertedindex", "philadelphia"));	

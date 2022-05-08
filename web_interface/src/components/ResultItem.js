@@ -4,7 +4,7 @@ const ResultItem = ({ result }) => {
     const { title, url, ir, pagerank, excerpt, score } = result;
 
     return (
-        <div class="item">
+        <div>
             <div class="content">
                 <a class="header"><a href={url} target="_blank">{ title }</a></a>
 

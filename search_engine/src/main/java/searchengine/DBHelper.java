@@ -161,13 +161,13 @@ public class DBHelper {
 				ResultSet rs = st.executeQuery(query);
 
 				while (rs.next()) {
-					if (seen.contains(rs.getString("url"))) continue;
+					if (seen.contains(rs.getString("title"))) continue;
 
 					Item item = new Item(rs.getString("term"), rs.getFloat("weight"), 
 							rs.getString("url"), rs.getString("title"), rs.getString("excerpt"));
 					
 					list.add(item);
-					seen.add(rs.getString("url"));
+					seen.add(rs.getString("title"));
 				}
 			}
 			
