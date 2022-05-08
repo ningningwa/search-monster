@@ -194,6 +194,19 @@
 						</configuration>
 					</execution>
 
+					<execution>
+						<id>search-engine-backup</id>
+						<goals>
+							<goal>java</goal>
+						</goals>
+						<configuration>
+							<mainClass>searchengine.SearchEngine</mainClass>
+							<arguments>
+								<argument>8002</argument>
+							</arguments>
+						</configuration>
+					</execution>
+
 					<!-- run worker2 -->
 					<execution>
 						<id>worker2</id>
