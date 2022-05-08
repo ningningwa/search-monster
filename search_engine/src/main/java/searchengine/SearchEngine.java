@@ -326,7 +326,7 @@ public class SearchEngine {
     	
     	// Compute term weight (idf) for each term
     	for (int i=0; i<termSize; i++) {
-    		int freq = helper.getIndexSizeForTerm(indexTable, queries.get(i));
+    		int freq = helper.getIndexSizeForTerm(tableList, queries.get(i));
     		freq = freq == 0 ? N : freq;
     		termW[i] = (float) Math.log(N / freq);
     		
@@ -448,7 +448,6 @@ public class SearchEngine {
 			} 
 			
 			String resp = br.lines().collect(Collectors.joining());
-			System.out.println("finishe br to string");
 			JSONObject obj = new JSONObject(resp);
 			
 			JSONArray array = obj.getJSONArray("search_results");
