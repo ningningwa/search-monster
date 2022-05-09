@@ -460,7 +460,7 @@ public class SearchEngine {
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.info("Price missing for certain products");
 		}
 		
 		return result;

@@ -1,5 +1,5 @@
 // const domain = 'http://localhost:8001';
-const domain = 'http://ec2-34-203-249-121.compute-1.amazonaws.com:8001';
+const domain = 'http://ec2-54-227-206-176.compute-1.amazonaws.com:8001';
 
 const querySearch = async (query) => {
 
