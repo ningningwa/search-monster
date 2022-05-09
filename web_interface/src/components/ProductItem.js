@@ -16,14 +16,6 @@ const ProductItem = ({ product }) => {
                 <div class="meta">
                     <span>{ price }</span>
                 </div>
-
-                <div class="description">
-                    <p>description</p>
-                </div>
-
-                <div class="extra">
-                    extra
-                </div>
             </div>
         </div>
     );

@@ -17,9 +17,6 @@ const ResultItem = ({ result }) => {
                     <p>{ excerpt }</p>
                 </div>
 
-                <div class="extra">
-                    {ir}, {pagerank}, {score}
-                </div>
             </div>
         </div>
     )
